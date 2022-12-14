@@ -10,15 +10,13 @@ var cardList = [
     "Alien7",
     "Alien8",
     "Alien9",
-    "Alien10",
-    "Alien11",
 ]
 
 
 var cardSet;
 var board = [];
-var rows = 8;
-var columns =8;
+var rows = 6;
+var columns =6;
 
 var card1Selected;
 var card2Selected;
@@ -45,10 +43,10 @@ function shuffleCards() {
 
 function startGame() {
     
-    for (let r = 0; r < 8; r++) {
+    for (let r = 0; r <=6; r++) {
         let row = [];
         
-        for (let c = 0; c <= 8; c++) {
+        for (let c = 0; c < 6; c++) {
             let cardImg = cardSet.pop();
             row.push(cardImg); //JS
             let card = document.createElement("img");
