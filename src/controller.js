@@ -1,10 +1,7 @@
 import { canMatch } from "./matcher.js";
-import { getElement, querySelectorAllAsList } from "./utils.js";
+import { getElement, querySelectorAllAsList, TILE_IMAGE_SIZE, TILE_SPACE, TILE_SIZE, drawConnect, clearLine } from "./utils.js";
 import { StraightConnect, TwoStraightConnect, ThreeStraightConnect } from "./model.js";
 
-const TILE_SIZE = 80;
-const TILE_SPACE = 8;
-const TILE_IMAGE_SIZE = 60;
 let PAIR_AMOUNT = 0;
 const UNIQUE = 43;
 let HORIZONTAL = 0;
@@ -86,11 +83,11 @@ const onMatch = (
     second,
     connection
   ) => {
-    // drawConnect(connection);
+    drawConnect(connection);
     setTimeout(() => {
       removeTile(first);
       removeTile(second);
-    //   clearLine();
+      clearLine();
       if (isNoMoreTile()) {
         notify("You win!!", false);
         displayAllCell();
