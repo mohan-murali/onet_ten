@@ -7,6 +7,9 @@ const TILE_SPACE = 8;
 const TILE_IMAGE_SIZE = 60;
 let PAIR_AMOUNT = 0;
 const UNIQUE = 43;
+let HORIZONTAL = 0;
+let VERTICAL = 0;
+let currentTimeout = 0;
 
 
 const showNotifyText = (text) => {
@@ -92,7 +95,7 @@ const onMatch = (
         notify("You win!!", false);
         displayAllCell();
       } else {
-        shuffleUntilAnyMatch();
+        shuffleUntilAnyMatch(HORIZONTAL, VERTICAL);
       }
     }, 200);
   }
@@ -211,8 +214,18 @@ const getList = ()=> {
     return result;
   }
 
+  const isAnyMatched = ()=> {
+    let tdList = querySelectorAllAsList("td");
+    for (let i of tdList) {
+      for (let j of tdList) {
+        if (canMatch(i.position[0], i.position[1], j.position[0], j.position[1])) return true;
+      }
+    }
+    return false;
+  }
+
 const shuffleUntilAnyMatch = (x,y) => {
-    shuffle(x,y);
+    while (!isAnyMatched()) shuffle(x,y);
     displayAllCell();
     attachEventListenerAllCell();
   }
@@ -259,6 +272,8 @@ const shuffleUntilAnyMatch = (x,y) => {
 
 const newGame=(x,y) => {
     PAIR_AMOUNT = (x*y)/2;
+    HORIZONTAL = x;
+    VERTICAL = y;
     let mainContainer = document.querySelector("#game-container");
     mainContainer.innerHTML = "";
     mainContainer.appendChild(newTable(x, y));
