@@ -1,19 +1,25 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>AWT - Onet_ten Game</title>
-        <link rel="stylesheet" href="cards.css">
-        <script src="cards.js"></script>
-    </head>
-    <body>
-        <h1> Welcome Onet_ten Game </h1>
-        <h2>Scores: <span id="errors">0</span></h2>
-        <div id="board">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css" />
+    <script type="module" src="src/controller.js"></script>
+    <title>onet ten</title>
+</head>
+<body>
+    <section>
+        <div id="control-bar">
+            <button id="new-game-button">New game</button>
+            <h1 id="notify-text"></h1>
         </div>
-    </body>
-    <body>
-        <button></button>
-    </body>
+        <div id="game-section">
+            <canvas id="game-overlay-canvas"></canvas>
+            <div id="game-container">
+                <!-- Reserved for js to create table element -->
+            </div>
+        </div>
+    </section>
+</body>
 </html>

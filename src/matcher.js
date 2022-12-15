@@ -74,3 +74,7 @@ function oneRA(board, p1X, p1Y, p2X, p2Y) {
 function twoRA(board, p1X, p1Y, p2X, p2Y) {
     // TODO: COMPLETE
 }
+
+export {
+    canMatch
+};
