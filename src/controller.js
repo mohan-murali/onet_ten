@@ -290,28 +290,44 @@ const newGame = (x, y) => {
 
   shuffleUntilAnyMatch(x, y);
   removeNotifyText();
+  document.querySelector("#new-game-button").style.display = "block";
 }
 
-
+let gameLevel = "";
 const main = () => {
-  // newGame(4,4);
+  document.querySelector("#new-game-button").addEventListener("click", () => {
+    startGame();
+  });
   document.querySelector("#easy").addEventListener("click", () => {
     var table = document.querySelector("table");
+    gameLevel = "easy";
     if (table)
       document.querySelector("#game-container").removeChild(table);
-    newGame(4, 4);
-  });
+      startGame();
+    });
   document.querySelector("#medium").addEventListener("click", () => {
     var table = document.querySelector("table");
+    gameLevel = "medium";
     if (table)
       document.querySelector("#game-container").removeChild(table);
-    newGame(6, 6);
-  });
+      startGame();
+    });
   document.querySelector("#hard").addEventListener("click", () => {
     var table = document.querySelector("table");
+    gameLevel = "hard";
     if (table)
       document.querySelector("#game-container").removeChild(table);
+      startGame();
+    });
+}
+
+const startGame = () => {
+  if (gameLevel == "easy") {
+    newGame(4, 4);
+  } else if (gameLevel == "medium") {
+    newGame(6, 6);
+  } else if (gameLevel == "hard") {
     newGame(8, 8);
-  });
+  }
 }
 main();

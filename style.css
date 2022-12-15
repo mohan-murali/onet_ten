@@ -3,47 +3,15 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100vh;
-    background-color: rgb(0, 83, 83);
-}
-
-section {
-    margin: auto;
-}
-
-#control-bar {
-    padding: 0 8px;
-}
-
-#game-section {
-    margin-top: 96px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-#game-overlay-canvas {
-    position: absolute;
-    pointer-events: none;
-}
-
-#game-container {
-    margin: auto;
-}
-
-#notify-text {
-    text-align: center;
-}
-
-table {
-    border-collapse: separate;
+    height: 100%;
+    background: url('./Ben10/Backdrop.jpeg');
 }
 
 td {
     padding: 0;
     box-sizing: border-box;
     text-align: center;
-    background-color: antiquewhite;
+    background-color: white;
     border-radius: 8px;
     box-shadow: 3px 3px #888888;
 }
@@ -59,16 +27,47 @@ td.hide {
     color: transparent;
     box-shadow: 0 0 transparent;
 }
-
-.tile-image {
-    object-fit: cover;
+#game-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#game-overlay-canvas {
+    position: absolute;
+    pointer-events: none;
 }
 
-p {
-    margin: 0;
+#game-section-wrapper {
+    margin-top: 110px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
-::selection {
-    background-color: transparent;
-    color: #000;
+.game-level, #new-game-button {
+    background-color: white;
+    color: black;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 8px;
+    margin: 16px auto;
+    padding:12px;
+    display: inline;
+}
+
+#new-game-button {
+    width: 100%;
+    display: none
+}
+
+#easy {
+    background-color: greenyellow
+}
+
+#medium {
+    background-color: yellow
+}
+
+#hard {
+    background-color: red
 }
