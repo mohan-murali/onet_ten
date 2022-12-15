@@ -65,7 +65,7 @@ function oneRA(board, p1X, p1Y, p2X, p2Y) {
     // IF ONE 90DEG TURN, COMPOSED OF TWO ADJACENCY CHECKS, WITH HORIZONTAL AND VERTICAL LINES MEETING AT THE JOINTS
 
     if (
-        (adjacent(board, p1X, p1Y, joint1.X, joint1.Y) && adjacent(board, p2X, p2Y, joint.X, joint.Y))
+        (adjacent(board, p1X, p1Y, joint1.X, joint1.Y) && adjacent(board, p2X, p2Y, joint1.X, joint1.Y))
         || (adjacent(board, p1X, p1Y, joint2.X, joint2.Y) && adjacent(board, p2X, p2Y, joint2.X, joint2.Y))
     ) return true;
     return false;
