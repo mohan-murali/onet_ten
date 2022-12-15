@@ -35,7 +35,7 @@ const newTableCellElement = () => {
 
 const createDisplayElement = num => {
     let img = document.createElement("img");
-    if (!num) return img;
+    if (num == null) return img;
     img.style.width = `${TILE_IMAGE_SIZE}px`
     img.style.height = `${TILE_IMAGE_SIZE}px`
     img.src = `ben10/Alien${num}.png`;
