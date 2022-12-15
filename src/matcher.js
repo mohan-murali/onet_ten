@@ -1,11 +1,12 @@
 // PASS THROUGH GAME BOARD AND XY POSITIONS OF POTH PIECES SELECTED
-import { Position, StraightConnect, TwoStraightConnect, isAllStraightConnect } from "./model.js";
+import { Position, StraightConnect, TwoStraightConnect, ThreeStraightConnect, isAllStraightConnect } from "./model.js";
 import { getElement } from "./utils.js";
 
-function canMatch(p1X, p1Y, p2X, p2Y) {
+function canMatch(v1, v2, p1X, p1Y, p2X, p2Y, hor, ver) {
+    if(v1 !== v2) return false;
     if ((p1X == p1Y) && (p2X == p2Y)) return false; // CHECK FOR SAME PIECE
 
-    if (adjacent(p1X, p1Y, p2X, p2Y) || oneRA(p1X, p1Y, p2X, p2Y) || twoRA(p1X, p1Y, p2X, p2Y)) {
+    if (adjacent(p1X, p1Y, p2X, p2Y) || oneRA(p1X, p1Y, p2X, p2Y) || twoRA(p1X, p1Y, p2X, p2Y, hor, ver)) {
         if(adjacent(p1X, p1Y, p2X, p2Y)){
             return adjacent(p1X, p1Y, p2X, p2Y);
         }
@@ -14,8 +15,8 @@ function canMatch(p1X, p1Y, p2X, p2Y) {
             return oneRA(p1X, p1Y, p2X, p2Y);
         }
 
-        if(twoRA(p1X, p1Y, p2X, p2Y)){
-            return twoRA(p1X, p1Y, p2X, p2Y);
+        if(twoRA(p1X, p1Y, p2X, p2Y, hor, ver)){
+            return twoRA(p1X, p1Y, p2X, p2Y, hor, ver);
         }
     }
     else return false;
@@ -93,10 +94,70 @@ function oneRA( p1X, p1Y, p2X, p2Y) {
     return false;
 }
 
-function twoRA(p1X, p1Y, p2X, p2Y) {
+function twoRA(p1X, p1Y, p2X, p2Y, hor, ver) {
     // TODO: COMPLETE
+    for (let i = -1; i <= ver; i++) {
+        let firstJoint = { position: [p1X, i] };
+        let secondJoint = { position: [p2X, i] };
+        let connecting = connectFourPoint(
+          p1X, p1Y,
+          firstJoint,
+          secondJoint,
+          p2X, p2Y
+        );
+        if (connecting) return connecting;
+      }
+
+      // Vertical 2 points
+    for (let i = -1; i <= hor; i++) {
+        let firstJoint = { position: [i, p1Y] };
+        let secondJoint = { position: [i, p2Y] };
+        let connecting = connectFourPoint(
+        p1X, p1Y,
+        firstJoint,
+        secondJoint,
+        p2X, p2Y
+        );
+        if (connecting) return connecting;
+    }
     return false;
 }
+
+const connectFourPoint =(
+    p1X, p1Y,
+    firstJoint,
+    secondJoint,
+    p2X, p2Y
+  )=> {
+    // first -> firstJoint -> secondJoint -> second
+    let firstToFirstJoint = adjacent(p1X, p1Y, firstJoint.position[0], firstJoint.position[1], false, true);
+    let firstJointToSecondJoint = adjacent(
+      firstJoint.position[0], firstJoint.position[1],
+      secondJoint.position[0], secondJoint.position[1],
+      true,
+      true
+    );
+    let secondJointToSecond = adjacent(
+      secondJoint.position[0], secondJoint.position[1],
+      p2X, p2Y,
+      true,
+      false
+    );
+    if (
+      isAllStraightConnect(
+        firstToFirstJoint,
+        firstJointToSecondJoint,
+        secondJointToSecond
+      )
+    )
+      return new ThreeStraightConnect(
+        firstToFirstJoint,
+        firstJointToSecondJoint,
+        secondJointToSecond
+      );
+
+    return false;
+  }
 
 export {
     canMatch

@@ -135,7 +135,7 @@ const onSecondClick = (x, y) => {
       return;
     }
 
-    let validMatched = canMatch(first.position[0], first.position[1], second.position[0], second.position[1]);
+    let validMatched = canMatch(first.tileValue, second.tileValue, first.position[0], first.position[1], second.position[0], second.position[1], HORIZONTAL, VERTICAL);
     if (
       validMatched instanceof StraightConnect ||
       validMatched instanceof TwoStraightConnect ||
@@ -218,7 +218,7 @@ const getList = ()=> {
     let tdList = querySelectorAllAsList("td");
     for (let i of tdList) {
       for (let j of tdList) {
-        if (canMatch(i.position[0], i.position[1], j.position[0], j.position[1])) return true;
+        if (canMatch(i.tileValue, j.tileValue, i.position[0], i.position[1], j.position[0], j.position[1]), HORIZONTAL, VERTICAL) return true;
       }
     }
     return false;
