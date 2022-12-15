@@ -298,10 +298,15 @@ const newGame=(x,y) => {
 
 
 const main = () => {
-    newGame(4,4);
+    // newGame(4,4);
     document.querySelector("#new-game-button").addEventListener("click", () => {
         newGame(4,4);
     });
+    document.querySelector("#medium").addEventListener("click", () => {
+      newGame(6,6);
+    });
+    document.querySelector("#hard").addEventListener("click", () => {
+      newGame(8,8);
+    });    
 }
-
 main();
