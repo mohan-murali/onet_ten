@@ -1,10 +1,12 @@
-//import { canMatch } from "./matcher";
+import { canMatch } from "./matcher.js";
+import { getElement } from "./utils.js";
 
 const TILE_SIZE = 80;
 const TILE_SPACE = 8;
 const TILE_IMAGE_SIZE = 60;
 let PAIR_AMOUNT = 0;
 const UNIQUE = 43;
+
 
 const querySelectorAllAsList = (
     selectorName
@@ -16,6 +18,7 @@ const querySelectorAllAsList = (
     }
     return result;
   }
+
 
 const showNotifyText = (text) => {
     document.querySelector('#notify-text').innerHTML = text
@@ -56,6 +59,57 @@ const displayAllCell = () => {
     });
   }
 
+const  isPresent = (x, y) => {
+    return getElement(x, y) != null && getElement(x, y).tileValue != null;
+  }
+
+const isFirstClick =()=> {
+    let anyActive = false;
+    document.querySelectorAll("td").forEach((value) => {
+        if (value.className.includes("active")) anyActive = true;
+    });
+    return anyActive;
+}
+
+const onFirstClick = (x, y) => {
+    getElement(x, y).className = "active";
+  }
+
+  const getActive = () => {
+    let activePosition = null;
+    document.querySelectorAll("td").forEach((value) => {
+      if (value.className.includes("active")) activePosition = value;
+    });
+    return activePosition;
+  }
+
+const onSecondClick = (x, y) => {
+    let first = getActive();
+    let second = getElement(x, y);
+
+    if (first == null || second == null) return;
+
+    if (first == second) {
+      first.className = "";
+      return;
+    }
+
+    let validMatched = canMatch(first.position[0], first.position[1], second.position[0], second.position[1]);
+    // if (
+    //   validMatched instanceof StraightConnect ||
+    //   validMatched instanceof TwoStraightConnect ||
+    //   validMatched instanceof ThreeStraightConnect
+    // ) {
+    //   onMatch(first, second, validMatched);
+    // } else onNotMatch(first, second);
+  }
+
+const onClick = (x, y) => {
+    if (!isPresent(x, y)) return;
+    if (isFirstClick()) onSecondClick(x, y);
+    else onFirstClick(x, y);
+  }
+
 const attachEventListenerAllCell = () => {
     document.querySelectorAll("td").forEach((td) => {
       td.removeEventListener("click", td.currentEventListener);
@@ -63,7 +117,7 @@ const attachEventListenerAllCell = () => {
         onClick(td.position[0], td.position[1]);
       };
       td.addEventListener("click", listener);
-      td.currentEventListener = listener;
+        td.currentEventListener = listener;
     });
   }
 
@@ -194,10 +248,8 @@ const newGame=(x,y) => {
 const main = () => {
     newGame(4,4);
     document.querySelector("#new-game-button").addEventListener("click", () => {
-    newGame(4,4);
+        newGame(4,4);
     });
 }
 
 main();
-
-
