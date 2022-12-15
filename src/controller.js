@@ -1,4 +1,6 @@
-//import { canMatch } from "./matcher";
+import { canMatch } from "./matcher.js";
+import { getElement, querySelectorAllAsList } from "./utils.js";
+import { StraightConnect, TwoStraightConnect, ThreeStraightConnect } from "./model.js";
 
 const TILE_SIZE = 80;
 const TILE_SPACE = 8;
@@ -6,16 +8,6 @@ const TILE_IMAGE_SIZE = 60;
 let PAIR_AMOUNT = 0;
 const UNIQUE = 43;
 
-const querySelectorAllAsList = (
-    selectorName
-  ) => {
-    let result=[];
-    let nodeList = document.querySelectorAll(selectorName);
-    for (let i = 0; i < nodeList.length; i++) {
-      result.push(nodeList.item(i));
-    }
-    return result;
-  }
 
 const showNotifyText = (text) => {
     document.querySelector('#notify-text').innerHTML = text
@@ -56,6 +48,106 @@ const displayAllCell = () => {
     });
   }
 
+const  isPresent = (x, y) => {
+    return getElement(x, y) != null && getElement(x, y).tileValue != null;
+  }
+
+const isFirstClick =()=> {
+    let anyActive = false;
+    document.querySelectorAll("td").forEach((value) => {
+        if (value.className.includes("active")) anyActive = true;
+    });
+    return anyActive;
+}
+
+const isNoMoreTile = () => {
+    let tdList = querySelectorAllAsList("td");
+    for (let td of tdList) {
+      if (td.tileValue != null || !td.className.includes("hide")) return false;
+    }
+    return true;
+  }
+
+const notify = (text, isAutoDisappear) => {
+    if (currentTimeout != null) clearTimeout(currentTimeout);
+    showNotifyText(text)
+    if (isAutoDisappear)
+        currentTimeout = setTimeout(() => {
+        removeNotifyText()
+        })
+}
+
+
+const onMatch = (
+    first,
+    second,
+    connection
+  ) => {
+    // drawConnect(connection);
+    setTimeout(() => {
+      removeTile(first);
+      removeTile(second);
+    //   clearLine();
+      if (isNoMoreTile()) {
+        notify("You win!!", false);
+        displayAllCell();
+      } else {
+        shuffleUntilAnyMatch();
+      }
+    }, 200);
+  }
+
+  const removeTile = (element) => {
+    element.className = "hide";
+    element.tileValue = null;
+    console.log(element)
+  }
+
+  const onNotMatch = (first, second) => {
+    first.className = "";
+    second.className = "active";
+  }
+
+
+const onFirstClick = (x, y) => {
+    getElement(x, y).className = "active";
+  }
+
+  const getActive = () => {
+    let activePosition = null;
+    document.querySelectorAll("td").forEach((value) => {
+      if (value.className.includes("active")) activePosition = value;
+    });
+    return activePosition;
+  }
+
+const onSecondClick = (x, y) => {
+    let first = getActive();
+    let second = getElement(x, y);
+
+    if (first == null || second == null) return;
+
+    if (first == second) {
+      first.className = "";
+      return;
+    }
+
+    let validMatched = canMatch(first.position[0], first.position[1], second.position[0], second.position[1]);
+    if (
+      validMatched instanceof StraightConnect ||
+      validMatched instanceof TwoStraightConnect ||
+      validMatched instanceof ThreeStraightConnect
+    ) {
+      onMatch(first, second, validMatched);
+    } else onNotMatch(first, second);
+  }
+
+const onClick = (x, y) => {
+    if (!isPresent(x, y)) return;
+    if (isFirstClick()) onSecondClick(x, y);
+    else onFirstClick(x, y);
+  }
+
 const attachEventListenerAllCell = () => {
     document.querySelectorAll("td").forEach((td) => {
       td.removeEventListener("click", td.currentEventListener);
@@ -63,7 +155,7 @@ const attachEventListenerAllCell = () => {
         onClick(td.position[0], td.position[1]);
       };
       td.addEventListener("click", listener);
-      td.currentEventListener = listener;
+        td.currentEventListener = listener;
     });
   }
 
@@ -134,7 +226,9 @@ const shuffleUntilAnyMatch = (x,y) => {
         matrix[k] = [];
       }
 
-      matrix[k].push(list[i]);
+      if(matrix[k]){
+        matrix[k].push(list[i]);
+      }
     }
 
     return matrix;
@@ -194,10 +288,8 @@ const newGame=(x,y) => {
 const main = () => {
     newGame(4,4);
     document.querySelector("#new-game-button").addEventListener("click", () => {
-    newGame(4,4);
+        newGame(4,4);
     });
 }
 
 main();
-
-

@@ -1,0 +1,29 @@
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+td {
+    padding: 0;
+    box-sizing: border-box;
+    text-align: center;
+    background-color: antiquewhite;
+    border-radius: 8px;
+    box-shadow: 3px 3px #888888;
+}
+
+td.active {
+    border-color: red;
+    border-width: 2px;
+    border-style: solid;
+}
+
+td.hide {
+    background-color: transparent;
+    color: transparent;
+    box-shadow: 0 0 transparent;
+}
