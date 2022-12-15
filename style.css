@@ -44,8 +44,7 @@ td.hide {
     justify-content: center;
 }
 
-#new-game-button {
-    width: 100%;
+.game-level, #new-game-button {
     background-color: white;
     color: black;
     font-size: 16px;
@@ -53,4 +52,22 @@ td.hide {
     border-radius: 8px;
     margin: 16px auto;
     padding:12px;
+    display: inline;
+}
+
+#new-game-button {
+    width: 100%;
+    display: none
+}
+
+#easy {
+    background-color: greenyellow
+}
+
+#medium {
+    background-color: yellow
+}
+
+#hard {
+    background-color: red
 }
