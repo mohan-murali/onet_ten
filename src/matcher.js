@@ -14,11 +14,16 @@ function canMatch(v1, v2, p1X, p1Y, p2X, p2Y, hor, ver) {
 
   if (
     adjacent(p1X, p1Y, p2X, p2Y) ||
+    isStraightLine(p1X, p1Y, p2X, p2Y) ||
     oneRA(p1X, p1Y, p2X, p2Y) ||
     twoRA(p1X, p1Y, p2X, p2Y, hor, ver)
   ) {
     if (adjacent(p1X, p1Y, p2X, p2Y)) {
       return adjacent(p1X, p1Y, p2X, p2Y);
+    }
+
+    if (isStraightLine(p1X, p1Y, p2X, p2Y)) {
+      return isStraightLine(p1X, p1Y, p2X, p2Y);
     }
 
     if (oneRA(p1X, p1Y, p2X, p2Y)) {
@@ -36,7 +41,7 @@ function occupied(X, Y) {
   return getElement(X, Y) != null && getElement(X, Y).tileValue != null;
 }
 
-function adjacent(p1X, p1Y, p2X, p2Y, isFirstJoint, isSecondJoint) {
+function adjacent(p1X, p1Y, p2X, p2Y) {
   // CHECK IF TWO PIECES ARE ON THE SAME PLANE
   // COMPLETED BY JOSH ROGERS (JJR25)
   if (p1X == p2X) {
@@ -47,7 +52,19 @@ function adjacent(p1X, p1Y, p2X, p2Y, isFirstJoint, isSecondJoint) {
         new Position(p1X, p1Y),
         new Position(p2X, p2Y)
       );
+  } else if (p1Y == p2Y) {
+    // X VARIES, Y EQUAL
+    if (Math.abs(p1X - p2X) == 1)
+      return new StraightConnect(
+        new Position(p1X, p1Y),
+        new Position(p2X, p2Y)
+      ); // NEXT TO EACH OTHER
+  }
+  return false;
+}
 
+function isStraightLine(p1X, p1Y, p2X, p2Y, isFirstJoint, isSecondJoint) {
+  if (p1X == p2X) {
     if (p1Y > p2Y) {
       for (
         let i = p2Y + (isSecondJoint ? 0 : 1);
@@ -74,13 +91,6 @@ function adjacent(p1X, p1Y, p2X, p2Y, isFirstJoint, isSecondJoint) {
       );
     }
   } else if (p1Y == p2Y) {
-    // X VARIES, Y EQUAL
-    if (Math.abs(p1X - p2X) == 1)
-      return new StraightConnect(
-        new Position(p1X, p1Y),
-        new Position(p2X, p2Y)
-      ); // NEXT TO EACH OTHER
-
     if (p1X > p2X) {
       for (
         let i = p2X + (isSecondJoint ? 0 : 1);
@@ -128,13 +138,13 @@ function oneRA(p1X, p1Y, p2X, p2Y) {
 
   // IF ONE 90DEG TURN, COMPOSED OF TWO ADJACENCY CHECKS, WITH HORIZONTAL AND VERTICAL LINES MEETING AT THE JOINTS
 
-  let firstJointFirst = adjacent(joint1.X, joint1.Y, p1X, p1Y, true);
-  let firstJointSecond = adjacent(joint1.X, joint1.Y, p2X, p2Y, true);
+  let firstJointFirst = isStraightLine(joint1.X, joint1.Y, p1X, p1Y, true);
+  let firstJointSecond = isStraightLine(joint1.X, joint1.Y, p2X, p2Y, true);
   if (isAllStraightConnect(firstJointFirst, firstJointSecond))
     return new TwoStraightConnect(firstJointFirst, firstJointSecond);
 
-  let secondJointFirst = adjacent(joint2.X, joint2.Y, p1X, p1Y, true);
-  let secondJointSecond = adjacent(joint2.X, joint2.Y, p2X, p2Y, true);
+  let secondJointFirst = isStraightLine(joint2.X, joint2.Y, p1X, p1Y, true);
+  let secondJointSecond = isStraightLine(joint2.X, joint2.Y, p2X, p2Y, true);
   if (isAllStraightConnect(secondJointFirst, secondJointSecond))
     return new TwoStraightConnect(secondJointFirst, secondJointSecond);
 
@@ -176,7 +186,7 @@ function twoRA(p1X, p1Y, p2X, p2Y, hor, ver) {
 
 const connectFourPoint = (p1X, p1Y, firstJoint, secondJoint, p2X, p2Y) => {
   // first -> firstJoint -> secondJoint -> second
-  let firstToFirstJoint = adjacent(
+  let firstToFirstJoint = isStraightLine(
     p1X,
     p1Y,
     firstJoint.position[0],
@@ -184,7 +194,7 @@ const connectFourPoint = (p1X, p1Y, firstJoint, secondJoint, p2X, p2Y) => {
     false,
     true
   );
-  let firstJointToSecondJoint = adjacent(
+  let firstJointToSecondJoint = isStraightLine(
     firstJoint.position[0],
     firstJoint.position[1],
     secondJoint.position[0],
@@ -192,7 +202,7 @@ const connectFourPoint = (p1X, p1Y, firstJoint, secondJoint, p2X, p2Y) => {
     true,
     true
   );
-  let secondJointToSecond = adjacent(
+  let secondJointToSecond = isStraightLine(
     secondJoint.position[0],
     secondJoint.position[1],
     p2X,
