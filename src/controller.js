@@ -8,21 +8,33 @@ let HORIZONTAL = 0;
 let VERTICAL = 0;
 let currentTimeout = 0;
 
-
+/**
+ * Displays the text to the user
+ * @param {text to be displayed to the user} text 
+ */
 const showNotifyText = (text) => {
   document.querySelector('#notify-text').innerHTML = text
 }
 
+/**
+ * Removes the text to be displayed
+ */
 const removeNotifyText = () => {
   document.querySelector('#notify-text').innerHTML = ""
 }
 
+/**
+ * Creates a new table
+ */
 const newTableElement = () => {
   let table = document.createElement("table");
   table.style.borderSpacing = `${TILE_SPACE}px`;
   return table;
 }
 
+/**
+ * Creates a new cell in table
+ */
 const newTableCellElement = () => {
   let td = document.createElement("td");
   td.style.width = `${TILE_SIZE}px`
@@ -30,6 +42,10 @@ const newTableCellElement = () => {
   return td;
 }
 
+/**
+ * Adds image to a cell inside table
+ * @param {tile number} num 
+ */
 const createDisplayElement = num => {
   let img = document.createElement("img");
   if (num == null) return img;
@@ -41,6 +57,9 @@ const createDisplayElement = num => {
   return img;
 }
 
+/**
+ * Adds all the image elements inside table cell
+ */
 const displayAllCell = () => {
   document.querySelectorAll("td").forEach((td) => {
     td.innerHTML = "";
@@ -48,10 +67,18 @@ const displayAllCell = () => {
   });
 }
 
+/**
+ * Checks if the element at the given position cooridnates is present
+ * @param {Position on X-axis} x 
+ * @param {Position on Y-axis} y 
+ */
 const isPresent = (x, y) => {
   return getElement(x, y) != null && getElement(x, y).tileValue != null;
 }
 
+/**
+ * Activates the first tile on click
+ */
 const isFirstClick = () => {
   let anyActive = false;
   document.querySelectorAll("td").forEach((value) => {
@@ -60,6 +87,9 @@ const isFirstClick = () => {
   return anyActive;
 }
 
+/**
+ * Checks if any tile is present or not
+ */
 const isNoMoreTile = () => {
   let tdList = querySelectorAllAsList("td");
   for (let td of tdList) {
@@ -68,6 +98,11 @@ const isNoMoreTile = () => {
   return true;
 }
 
+/**
+ * Notifies the user with the given message
+ * @param {Text displayed to the user} text 
+ * @param {flag to check if message should disappear automatically} isAutoDisappear 
+ */
 const notify = (text, isAutoDisappear) => {
   if (currentTimeout != null) clearTimeout(currentTimeout);
   showNotifyText(text)
@@ -77,7 +112,12 @@ const notify = (text, isAutoDisappear) => {
     })
 }
 
-
+/**
+ * Triggers line draw when the tiles are matched and shuffles if no match is found
+ * @param {First selected tile} first 
+ * @param {Second selected tile} second 
+ * @param {flag to check if the tiles matched} connection 
+ */
 const onMatch = (
   first,
   second,
@@ -97,22 +137,38 @@ const onMatch = (
   }, 200);
 }
 
+/**
+ * Hides the given tile when matched
+ * @param {The matched tile} element 
+ */
 const removeTile = (element) => {
   element.className = "hide";
   element.tileValue = null;
   console.log(element)
 }
 
+/**
+ * Activates the second tile if the given 2 tiles don't match
+ * @param {First selected tile} first 
+ * @param {Second selected tile} second 
+ */
 const onNotMatch = (first, second) => {
   first.className = "";
   second.className = "active";
 }
 
-
+/**
+ * Activates the element at x,y position 
+ * @param {Position on X-axis} x 
+ * @param {Position on Y-axis} y 
+ */
 const onFirstClick = (x, y) => {
   getElement(x, y).className = "active";
 }
 
+/**
+ * Returns the active element
+ */
 const getActive = () => {
   let activePosition = null;
   document.querySelectorAll("td").forEach((value) => {
@@ -121,6 +177,11 @@ const getActive = () => {
   return activePosition;
 }
 
+/**
+ * Triggers validations when second tile is clicked
+ * @param {Number of columns} x 
+ * @param {Number of rows} y 
+ */
 const onSecondClick = (x, y) => {
   let first = getActive();
   let second = getElement(x, y);
@@ -142,12 +203,20 @@ const onSecondClick = (x, y) => {
   } else onNotMatch(first, second);
 }
 
+/**
+ * Method triggered when a tile is clicked
+ * @param {Number of columns} x 
+ * @param {Number of rows} y 
+ */
 const onClick = (x, y) => {
   if (!isPresent(x, y)) return;
   if (isFirstClick()) onSecondClick(x, y);
   else onFirstClick(x, y);
 }
 
+/**
+ * Removes the click listener from all elements and initiates a new lister to the currently clicked element
+ */
 const attachEventListenerAllCell = () => {
   document.querySelectorAll("td").forEach((td) => {
     td.removeEventListener("click", td.currentEventListener);
@@ -159,6 +228,11 @@ const attachEventListenerAllCell = () => {
   });
 }
 
+/**
+ * Shuffles the elements based on number of rows and columns
+ * @param {Number of columns} x 
+ * @param {Number of rows} y 
+ */
 const shuffle = (x, y) => {
   let tdList = querySelectorAllAsList("td");
 
@@ -193,6 +267,9 @@ const shuffle = (x, y) => {
   document.querySelector("#game-container").appendChild(table);
 }
 
+/**
+ * List of shuffled elements' values
+ */
 const getList = () => {
   let result = [];
 
@@ -211,6 +288,9 @@ const getList = () => {
   return result;
 }
 
+/**
+ * Checks whether a match exists
+ */
 const isAnyMatched = () => {
   let tdList = querySelectorAllAsList("td");
   for (let i of tdList) {
@@ -221,12 +301,22 @@ const isAnyMatched = () => {
   return false;
 }
 
+/**
+ * Checks if shuffling of grid is required
+ * @param {Number of columns} x 
+ * @param {Number of rows} y 
+ */
 const shuffleUntilAnyMatch = (x, y) => {
   while (!isAnyMatched()) shuffle(x, y);
   displayAllCell();
   attachEventListenerAllCell();
 }
 
+/**
+ * Converts the list of element values to matrix
+ * @param {*} list 
+ * @param {*} elementsPerSubArray 
+ */
 function listToMatrix(list, elementsPerSubArray) {
   let matrix = [];
 
@@ -244,7 +334,11 @@ function listToMatrix(list, elementsPerSubArray) {
   return matrix;
 }
 
-
+/**
+ * Creates a new table to display in the form of grid based on number of rows and columns
+ * @param {Number of columns} x 
+ * @param {Number of rows} y 
+ */
 const newTable = (x, y) => {
   let table = newTableElement();
   let tbody = document.createElement("tbody");
@@ -267,6 +361,11 @@ const newTable = (x, y) => {
   return table;
 }
 
+/**
+ * Creates the grid of game based on number of columns and rows
+ * @param {Number of columns} x 
+ * @param {Number of rows} y 
+ */
 const newGame = (x, y) => {
   PAIR_AMOUNT = (x * y) / 2;
   HORIZONTAL = x;
@@ -294,6 +393,10 @@ const newGame = (x, y) => {
 }
 
 let gameLevel = "";
+
+/**
+ * Main method to decide game based on difficulty type
+ */
 const main = () => {
   document.querySelector("#new-game-button").addEventListener("click", () => {
     startGame();
@@ -321,6 +424,9 @@ const main = () => {
     });
 }
 
+/**
+ * Starts new game with specific grid based on difficulty level
+ */
 const startGame = () => {
   if (gameLevel == "easy") {
     newGame(4, 4);
