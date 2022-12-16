@@ -428,6 +428,9 @@ let gameLevel = "";
  * Main method to decide game based on difficulty type
  */
 const main = () => {
+  document.querySelector("#shuffle").addEventListener("click", () => {
+    shuffleUntilAnyMatch(HORIZONTAL, VERTICAL);
+  });
   document.querySelector("#new-game-button").addEventListener("click", () => {
     startGame();
   });
