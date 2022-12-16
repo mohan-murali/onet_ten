@@ -1,6 +1,18 @@
 import { canMatch } from "./matcher.js";
-import { getElement, querySelectorAllAsList, TILE_IMAGE_SIZE, TILE_SPACE, TILE_SIZE, drawConnect, clearLine } from "./utils.js";
-import { StraightConnect, TwoStraightConnect, ThreeStraightConnect } from "./model.js";
+import {
+  getElement,
+  querySelectorAllAsList,
+  TILE_IMAGE_SIZE,
+  TILE_SPACE,
+  TILE_SIZE,
+  drawConnect,
+  clearLine,
+} from "./utils.js";
+import {
+  StraightConnect,
+  TwoStraightConnect,
+  ThreeStraightConnect,
+} from "./model.js";
 
 let PAIR_AMOUNT = 0;
 const UNIQUE = 43;
@@ -8,49 +20,48 @@ let HORIZONTAL = 0;
 let VERTICAL = 0;
 let currentTimeout = 0;
 
-
 const showNotifyText = (text) => {
-  document.querySelector('#notify-text').innerHTML = text
-}
+  document.querySelector("#notify-text").innerHTML = text;
+};
 
 const removeNotifyText = () => {
-  document.querySelector('#notify-text').innerHTML = ""
-}
+  document.querySelector("#notify-text").innerHTML = "";
+};
 
 const newTableElement = () => {
   let table = document.createElement("table");
   table.style.borderSpacing = `${TILE_SPACE}px`;
   return table;
-}
+};
 
 const newTableCellElement = () => {
   let td = document.createElement("td");
-  td.style.width = `${TILE_SIZE}px`
-  td.style.height = `${TILE_SIZE}px`
+  td.style.width = `${TILE_SIZE}px`;
+  td.style.height = `${TILE_SIZE}px`;
   return td;
-}
+};
 
-const createDisplayElement = num => {
+const createDisplayElement = (num) => {
   let img = document.createElement("img");
   if (num == null) return img;
-  img.style.width = `${TILE_IMAGE_SIZE}px`
-  img.style.height = `${TILE_IMAGE_SIZE}px`
+  img.style.width = `${TILE_IMAGE_SIZE}px`;
+  img.style.height = `${TILE_IMAGE_SIZE}px`;
   img.src = `ben10/Alien${num}.png`;
-  img.className = "tile-image"
-  img.draggable = false
+  img.className = "tile-image";
+  img.draggable = false;
   return img;
-}
+};
 
 const displayAllCell = () => {
   document.querySelectorAll("td").forEach((td) => {
     td.innerHTML = "";
     td.appendChild(createDisplayElement(td.tileValue));
   });
-}
+};
 
 const isPresent = (x, y) => {
   return getElement(x, y) != null && getElement(x, y).tileValue != null;
-}
+};
 
 const isFirstClick = () => {
   let anyActive = false;
@@ -58,7 +69,7 @@ const isFirstClick = () => {
     if (value.className.includes("active")) anyActive = true;
   });
   return anyActive;
-}
+};
 
 const isNoMoreTile = () => {
   let tdList = querySelectorAllAsList("td");
@@ -66,23 +77,18 @@ const isNoMoreTile = () => {
     if (td.tileValue != null || !td.className.includes("hide")) return false;
   }
   return true;
-}
+};
 
 const notify = (text, isAutoDisappear) => {
   if (currentTimeout != null) clearTimeout(currentTimeout);
-  showNotifyText(text)
+  showNotifyText(text);
   if (isAutoDisappear)
     currentTimeout = setTimeout(() => {
-      removeNotifyText()
-    })
-}
+      removeNotifyText();
+    });
+};
 
-
-const onMatch = (
-  first,
-  second,
-  connection
-) => {
+const onMatch = (first, second, connection) => {
   drawConnect(connection);
   setTimeout(() => {
     removeTile(first);
@@ -93,25 +99,25 @@ const onMatch = (
       displayAllCell();
     } else {
       shuffleUntilAnyMatch(HORIZONTAL, VERTICAL);
+      console.log("shuffle", HORIZONTAL, VERTICAL);
     }
   }, 200);
-}
+};
 
 const removeTile = (element) => {
   element.className = "hide";
   element.tileValue = null;
-  console.log(element)
-}
+  console.log(element);
+};
 
 const onNotMatch = (first, second) => {
   first.className = "";
   second.className = "active";
-}
-
+};
 
 const onFirstClick = (x, y) => {
   getElement(x, y).className = "active";
-}
+};
 
 const getActive = () => {
   let activePosition = null;
@@ -119,7 +125,7 @@ const getActive = () => {
     if (value.className.includes("active")) activePosition = value;
   });
   return activePosition;
-}
+};
 
 const onSecondClick = (x, y) => {
   let first = getActive();
@@ -132,7 +138,16 @@ const onSecondClick = (x, y) => {
     return;
   }
 
-  let validMatched = canMatch(first.tileValue, second.tileValue, first.position[0], first.position[1], second.position[0], second.position[1], HORIZONTAL, VERTICAL);
+  let validMatched = canMatch(
+    first.tileValue,
+    second.tileValue,
+    first.position[0],
+    first.position[1],
+    second.position[0],
+    second.position[1],
+    HORIZONTAL,
+    VERTICAL
+  );
   if (
     validMatched instanceof StraightConnect ||
     validMatched instanceof TwoStraightConnect ||
@@ -140,13 +155,13 @@ const onSecondClick = (x, y) => {
   ) {
     onMatch(first, second, validMatched);
   } else onNotMatch(first, second);
-}
+};
 
 const onClick = (x, y) => {
   if (!isPresent(x, y)) return;
   if (isFirstClick()) onSecondClick(x, y);
   else onFirstClick(x, y);
-}
+};
 
 const attachEventListenerAllCell = () => {
   document.querySelectorAll("td").forEach((td) => {
@@ -157,7 +172,7 @@ const attachEventListenerAllCell = () => {
     td.addEventListener("click", listener);
     td.currentEventListener = listener;
   });
-}
+};
 
 const shuffle = (x, y) => {
   let tdList = querySelectorAllAsList("td");
@@ -191,7 +206,7 @@ const shuffle = (x, y) => {
   table.appendChild(tbody);
 
   document.querySelector("#game-container").appendChild(table);
-}
+};
 
 const getList = () => {
   let result = [];
@@ -209,23 +224,38 @@ const getList = () => {
   }
 
   return result;
-}
+};
 
 const isAnyMatched = () => {
   let tdList = querySelectorAllAsList("td");
   for (let i of tdList) {
     for (let j of tdList) {
-      if (canMatch(i.tileValue, j.tileValue, i.position[0], i.position[1], j.position[0], j.position[1]), HORIZONTAL, VERTICAL) return true;
+      if (
+        canMatch(
+          i.tileValue,
+          j.tileValue,
+          i.position[0],
+          i.position[1],
+          j.position[0],
+          j.position[1],
+          HORIZONTAL,
+          VERTICAL
+        )
+      )
+        return true;
     }
   }
   return false;
-}
+};
 
 const shuffleUntilAnyMatch = (x, y) => {
-  while (!isAnyMatched()) shuffle(x, y);
+  while (!isAnyMatched()) {
+    console.log("no match");
+    shuffle(x, y);
+  }
   displayAllCell();
   attachEventListenerAllCell();
-}
+};
 
 function listToMatrix(list, elementsPerSubArray) {
   let matrix = [];
@@ -243,7 +273,6 @@ function listToMatrix(list, elementsPerSubArray) {
 
   return matrix;
 }
-
 
 const newTable = (x, y) => {
   let table = newTableElement();
@@ -265,7 +294,7 @@ const newTable = (x, y) => {
   table.appendChild(tbody);
 
   return table;
-}
+};
 
 const newGame = (x, y) => {
   PAIR_AMOUNT = (x * y) / 2;
@@ -274,24 +303,20 @@ const newGame = (x, y) => {
   let mainContainer = document.querySelector("#game-container");
   mainContainer.innerHTML = "";
   mainContainer.appendChild(newTable(x, y));
-  mainContainer.style.width = `${x * (TILE_SIZE + TILE_SPACE) + TILE_SPACE
-    }px`;
-  mainContainer.style.height = `${y * (TILE_SIZE + TILE_SPACE) + TILE_SPACE
-    }px`;
+  mainContainer.style.width = `${x * (TILE_SIZE + TILE_SPACE) + TILE_SPACE}px`;
+  mainContainer.style.height = `${y * (TILE_SIZE + TILE_SPACE) + TILE_SPACE}px`;
 
   let gameOverlayCanvas = document.querySelector("#game-overlay-canvas");
 
-  gameOverlayCanvas.style.width = `${(x + 2) * (TILE_SIZE + TILE_SPACE)
-    }px`;
-  gameOverlayCanvas.style.height = `${(y + 2) * (TILE_SIZE + TILE_SPACE)
-    }px`;
+  gameOverlayCanvas.style.width = `${(x + 2) * (TILE_SIZE + TILE_SPACE)}px`;
+  gameOverlayCanvas.style.height = `${(y + 2) * (TILE_SIZE + TILE_SPACE)}px`;
   gameOverlayCanvas.width = (x + 2) * (TILE_SIZE + TILE_SPACE);
   gameOverlayCanvas.height = (y + 2) * (TILE_SIZE + TILE_SPACE);
 
   shuffleUntilAnyMatch(x, y);
   removeNotifyText();
   document.querySelector("#new-game-button").style.display = "block";
-}
+};
 
 let gameLevel = "";
 const main = () => {
@@ -301,25 +326,22 @@ const main = () => {
   document.querySelector("#easy").addEventListener("click", () => {
     var table = document.querySelector("table");
     gameLevel = "easy";
-    if (table)
-      document.querySelector("#game-container").removeChild(table);
-      startGame();
-    });
+    if (table) document.querySelector("#game-container").removeChild(table);
+    startGame();
+  });
   document.querySelector("#medium").addEventListener("click", () => {
     var table = document.querySelector("table");
     gameLevel = "medium";
-    if (table)
-      document.querySelector("#game-container").removeChild(table);
-      startGame();
-    });
+    if (table) document.querySelector("#game-container").removeChild(table);
+    startGame();
+  });
   document.querySelector("#hard").addEventListener("click", () => {
     var table = document.querySelector("table");
     gameLevel = "hard";
-    if (table)
-      document.querySelector("#game-container").removeChild(table);
-      startGame();
-    });
-}
+    if (table) document.querySelector("#game-container").removeChild(table);
+    startGame();
+  });
+};
 
 const startGame = () => {
   if (gameLevel == "easy") {
@@ -329,5 +351,5 @@ const startGame = () => {
   } else if (gameLevel == "hard") {
     newGame(8, 8);
   }
-}
+};
 main();
