@@ -1,6 +1,18 @@
 import { canMatch } from "./matcher.js";
-import { getElement, querySelectorAllAsList, TILE_IMAGE_SIZE, TILE_SPACE, TILE_SIZE, drawConnect, clearLine } from "./utils.js";
-import { StraightConnect, TwoStraightConnect, ThreeStraightConnect } from "./model.js";
+import {
+  getElement,
+  querySelectorAllAsList,
+  TILE_IMAGE_SIZE,
+  TILE_SPACE,
+  TILE_SIZE,
+  drawConnect,
+  clearLine,
+} from "./utils.js";
+import {
+  StraightConnect,
+  TwoStraightConnect,
+  ThreeStraightConnect,
+} from "./model.js";
 
 let PAIR_AMOUNT = 0;
 const UNIQUE = 43;
@@ -13,15 +25,15 @@ let currentTimeout = 0;
  * @param {text to be displayed to the user} text 
  */
 const showNotifyText = (text) => {
-  document.querySelector('#notify-text').innerHTML = text
-}
+  document.querySelector("#notify-text").innerHTML = text;
+};
 
 /**
  * Removes the text to be displayed
  */
 const removeNotifyText = () => {
-  document.querySelector('#notify-text').innerHTML = ""
-}
+  document.querySelector("#notify-text").innerHTML = "";
+};
 
 /**
  * Creates a new table
@@ -30,32 +42,32 @@ const newTableElement = () => {
   let table = document.createElement("table");
   table.style.borderSpacing = `${TILE_SPACE}px`;
   return table;
-}
+};
 
 /**
  * Creates a new cell in table
  */
 const newTableCellElement = () => {
   let td = document.createElement("td");
-  td.style.width = `${TILE_SIZE}px`
-  td.style.height = `${TILE_SIZE}px`
+  td.style.width = `${TILE_SIZE}px`;
+  td.style.height = `${TILE_SIZE}px`;
   return td;
-}
+};
 
 /**
  * Adds image to a cell inside table
  * @param {tile number} num 
  */
-const createDisplayElement = num => {
+const createDisplayElement = (num) => {
   let img = document.createElement("img");
   if (num == null) return img;
-  img.style.width = `${TILE_IMAGE_SIZE}px`
-  img.style.height = `${TILE_IMAGE_SIZE}px`
+  img.style.width = `${TILE_IMAGE_SIZE}px`;
+  img.style.height = `${TILE_IMAGE_SIZE}px`;
   img.src = `ben10/Alien${num}.png`;
-  img.className = "tile-image"
-  img.draggable = false
+  img.className = "tile-image";
+  img.draggable = false;
   return img;
-}
+};
 
 /**
  * Adds all the image elements inside table cell
@@ -65,7 +77,7 @@ const displayAllCell = () => {
     td.innerHTML = "";
     td.appendChild(createDisplayElement(td.tileValue));
   });
-}
+};
 
 /**
  * Checks if the element at the given position cooridnates is present
@@ -74,7 +86,7 @@ const displayAllCell = () => {
  */
 const isPresent = (x, y) => {
   return getElement(x, y) != null && getElement(x, y).tileValue != null;
-}
+};
 
 /**
  * Activates the first tile on click
@@ -85,7 +97,7 @@ const isFirstClick = () => {
     if (value.className.includes("active")) anyActive = true;
   });
   return anyActive;
-}
+};
 
 /**
  * Checks if any tile is present or not
@@ -96,7 +108,7 @@ const isNoMoreTile = () => {
     if (td.tileValue != null || !td.className.includes("hide")) return false;
   }
   return true;
-}
+};
 
 /**
  * Notifies the user with the given message
@@ -105,12 +117,12 @@ const isNoMoreTile = () => {
  */
 const notify = (text, isAutoDisappear) => {
   if (currentTimeout != null) clearTimeout(currentTimeout);
-  showNotifyText(text)
+  showNotifyText(text);
   if (isAutoDisappear)
     currentTimeout = setTimeout(() => {
-      removeNotifyText()
-    })
-}
+      removeNotifyText();
+    });
+};
 
 /**
  * Triggers line draw when the tiles are matched and shuffles if no match is found
@@ -118,11 +130,7 @@ const notify = (text, isAutoDisappear) => {
  * @param {Second selected tile} second 
  * @param {flag to check if the tiles matched} connection 
  */
-const onMatch = (
-  first,
-  second,
-  connection
-) => {
+const onMatch = (first, second, connection) => {
   drawConnect(connection);
   setTimeout(() => {
     removeTile(first);
@@ -133,9 +141,10 @@ const onMatch = (
       displayAllCell();
     } else {
       shuffleUntilAnyMatch(HORIZONTAL, VERTICAL);
+      console.log("shuffle", HORIZONTAL, VERTICAL);
     }
   }, 200);
-}
+};
 
 /**
  * Hides the given tile when matched
@@ -144,8 +153,8 @@ const onMatch = (
 const removeTile = (element) => {
   element.className = "hide";
   element.tileValue = null;
-  console.log(element)
-}
+  console.log(element);
+};
 
 /**
  * Activates the second tile if the given 2 tiles don't match
@@ -164,7 +173,7 @@ const onNotMatch = (first, second) => {
  */
 const onFirstClick = (x, y) => {
   getElement(x, y).className = "active";
-}
+};
 
 /**
  * Returns the active element
@@ -175,7 +184,7 @@ const getActive = () => {
     if (value.className.includes("active")) activePosition = value;
   });
   return activePosition;
-}
+};
 
 /**
  * Triggers validations when second tile is clicked
@@ -193,7 +202,16 @@ const onSecondClick = (x, y) => {
     return;
   }
 
-  let validMatched = canMatch(first.tileValue, second.tileValue, first.position[0], first.position[1], second.position[0], second.position[1], HORIZONTAL, VERTICAL);
+  let validMatched = canMatch(
+    first.tileValue,
+    second.tileValue,
+    first.position[0],
+    first.position[1],
+    second.position[0],
+    second.position[1],
+    HORIZONTAL,
+    VERTICAL
+  );
   if (
     validMatched instanceof StraightConnect ||
     validMatched instanceof TwoStraightConnect ||
@@ -201,7 +219,7 @@ const onSecondClick = (x, y) => {
   ) {
     onMatch(first, second, validMatched);
   } else onNotMatch(first, second);
-}
+};
 
 /**
  * Method triggered when a tile is clicked
@@ -212,7 +230,7 @@ const onClick = (x, y) => {
   if (!isPresent(x, y)) return;
   if (isFirstClick()) onSecondClick(x, y);
   else onFirstClick(x, y);
-}
+};
 
 /**
  * Removes the click listener from all elements and initiates a new lister to the currently clicked element
@@ -226,7 +244,7 @@ const attachEventListenerAllCell = () => {
     td.addEventListener("click", listener);
     td.currentEventListener = listener;
   });
-}
+};
 
 /**
  * Shuffles the elements based on number of rows and columns
@@ -265,7 +283,7 @@ const shuffle = (x, y) => {
   table.appendChild(tbody);
 
   document.querySelector("#game-container").appendChild(table);
-}
+};
 
 /**
  * List of shuffled elements' values
@@ -286,7 +304,7 @@ const getList = () => {
   }
 
   return result;
-}
+};
 
 /**
  * Checks whether a match exists
@@ -295,11 +313,23 @@ const isAnyMatched = () => {
   let tdList = querySelectorAllAsList("td");
   for (let i of tdList) {
     for (let j of tdList) {
-      if (canMatch(i.tileValue, j.tileValue, i.position[0], i.position[1], j.position[0], j.position[1]), HORIZONTAL, VERTICAL) return true;
+      if (
+        canMatch(
+          i.tileValue,
+          j.tileValue,
+          i.position[0],
+          i.position[1],
+          j.position[0],
+          j.position[1],
+          HORIZONTAL,
+          VERTICAL
+        )
+      )
+        return true;
     }
   }
   return false;
-}
+};
 
 /**
  * Checks if shuffling of grid is required
@@ -307,10 +337,13 @@ const isAnyMatched = () => {
  * @param {Number of rows} y 
  */
 const shuffleUntilAnyMatch = (x, y) => {
-  while (!isAnyMatched()) shuffle(x, y);
+  while (!isAnyMatched()) {
+    console.log("no match");
+    shuffle(x, y);
+  }
   displayAllCell();
   attachEventListenerAllCell();
-}
+};
 
 /**
  * Converts the list of element values to matrix
@@ -359,7 +392,7 @@ const newTable = (x, y) => {
   table.appendChild(tbody);
 
   return table;
-}
+};
 
 /**
  * Creates the grid of game based on number of columns and rows
@@ -373,24 +406,20 @@ const newGame = (x, y) => {
   let mainContainer = document.querySelector("#game-container");
   mainContainer.innerHTML = "";
   mainContainer.appendChild(newTable(x, y));
-  mainContainer.style.width = `${x * (TILE_SIZE + TILE_SPACE) + TILE_SPACE
-    }px`;
-  mainContainer.style.height = `${y * (TILE_SIZE + TILE_SPACE) + TILE_SPACE
-    }px`;
+  mainContainer.style.width = `${x * (TILE_SIZE + TILE_SPACE) + TILE_SPACE}px`;
+  mainContainer.style.height = `${y * (TILE_SIZE + TILE_SPACE) + TILE_SPACE}px`;
 
   let gameOverlayCanvas = document.querySelector("#game-overlay-canvas");
 
-  gameOverlayCanvas.style.width = `${(x + 2) * (TILE_SIZE + TILE_SPACE)
-    }px`;
-  gameOverlayCanvas.style.height = `${(y + 2) * (TILE_SIZE + TILE_SPACE)
-    }px`;
+  gameOverlayCanvas.style.width = `${(x + 2) * (TILE_SIZE + TILE_SPACE)}px`;
+  gameOverlayCanvas.style.height = `${(y + 2) * (TILE_SIZE + TILE_SPACE)}px`;
   gameOverlayCanvas.width = (x + 2) * (TILE_SIZE + TILE_SPACE);
   gameOverlayCanvas.height = (y + 2) * (TILE_SIZE + TILE_SPACE);
 
   shuffleUntilAnyMatch(x, y);
   removeNotifyText();
   document.querySelector("#new-game-button").style.display = "block";
-}
+};
 
 let gameLevel = "";
 
@@ -404,25 +433,22 @@ const main = () => {
   document.querySelector("#easy").addEventListener("click", () => {
     var table = document.querySelector("table");
     gameLevel = "easy";
-    if (table)
-      document.querySelector("#game-container").removeChild(table);
-      startGame();
-    });
+    if (table) document.querySelector("#game-container").removeChild(table);
+    startGame();
+  });
   document.querySelector("#medium").addEventListener("click", () => {
     var table = document.querySelector("table");
     gameLevel = "medium";
-    if (table)
-      document.querySelector("#game-container").removeChild(table);
-      startGame();
-    });
+    if (table) document.querySelector("#game-container").removeChild(table);
+    startGame();
+  });
   document.querySelector("#hard").addEventListener("click", () => {
     var table = document.querySelector("table");
     gameLevel = "hard";
-    if (table)
-      document.querySelector("#game-container").removeChild(table);
-      startGame();
-    });
-}
+    if (table) document.querySelector("#game-container").removeChild(table);
+    startGame();
+  });
+};
 
 /**
  * Starts new game with specific grid based on difficulty level
@@ -435,5 +461,5 @@ const startGame = () => {
   } else if (gameLevel == "hard") {
     newGame(8, 8);
   }
-}
+};
 main();

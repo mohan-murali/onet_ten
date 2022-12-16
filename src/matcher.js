@@ -172,7 +172,7 @@ function oneRA(p1X, p1Y, p2X, p2Y) {
 }
 
 /**
- * 
+ * Identifies 2 right angles triangles
  * @param {Position of first tile on x-axis} p1X 
  * @param {Position of first tile on y-axis} p1Y 
  * @param {Position of second tile on x-axis} p2X 
@@ -181,7 +181,7 @@ function oneRA(p1X, p1Y, p2X, p2Y) {
  * @param {Number of rows} ver 
  */
 function twoRA(p1X, p1Y, p2X, p2Y, hor, ver) {
-  for (let i = 0; i <= ver; i++) {
+  for (let i = -1; i <= ver; i++) {
     let firstJoint = { position: [p1X, i] };
     let secondJoint = { position: [p2X, i] };
     let connecting = connectFourPoint(
@@ -196,7 +196,7 @@ function twoRA(p1X, p1Y, p2X, p2Y, hor, ver) {
   }
 
   // Vertical 2 points
-  for (let i = 0; i <= hor; i++) {
+  for (let i = -1; i <= hor; i++) {
     let firstJoint = { position: [i, p1Y] };
     let secondJoint = { position: [i, p2Y] };
     let connecting = connectFourPoint(
