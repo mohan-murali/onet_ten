@@ -22,7 +22,7 @@ let currentTimeout = 0;
 
 /**
  * Displays the text to the user
- * @param {text to be displayed to the user} text 
+ * @param {text to be displayed to the user} text
  */
 const showNotifyText = (text) => {
   document.querySelector("#notify-text").style.color = "green";
@@ -57,7 +57,7 @@ const newTableCellElement = () => {
 
 /**
  * Adds image to a cell inside table
- * @param {tile number} num 
+ * @param {tile number} num
  */
 const createDisplayElement = (num) => {
   let img = document.createElement("img");
@@ -82,8 +82,8 @@ const displayAllCell = () => {
 
 /**
  * Checks if the element at the given position cooridnates is present
- * @param {Position on X-axis} x 
- * @param {Position on Y-axis} y 
+ * @param {Position on X-axis} x
+ * @param {Position on Y-axis} y
  */
 const isPresent = (x, y) => {
   return getElement(x, y) != null && getElement(x, y).tileValue != null;
@@ -113,8 +113,8 @@ const isNoMoreTile = () => {
 
 /**
  * Notifies the user with the given message
- * @param {Text displayed to the user} text 
- * @param {flag to check if message should disappear automatically} isAutoDisappear 
+ * @param {Text displayed to the user} text
+ * @param {flag to check if message should disappear automatically} isAutoDisappear
  */
 const notify = (text, isAutoDisappear) => {
   if (currentTimeout != null) clearTimeout(currentTimeout);
@@ -127,9 +127,9 @@ const notify = (text, isAutoDisappear) => {
 
 /**
  * Triggers line draw when the tiles are matched and shuffles if no match is found
- * @param {First selected tile} first 
- * @param {Second selected tile} second 
- * @param {flag to check if the tiles matched} connection 
+ * @param {First selected tile} first
+ * @param {Second selected tile} second
+ * @param {flag to check if the tiles matched} connection
  */
 const onMatch = (first, second, connection) => {
   drawConnect(connection);
@@ -149,7 +149,7 @@ const onMatch = (first, second, connection) => {
 
 /**
  * Hides the given tile when matched
- * @param {The matched tile} element 
+ * @param {The matched tile} element
  */
 const removeTile = (element) => {
   element.className = "hide";
@@ -159,8 +159,8 @@ const removeTile = (element) => {
 
 /**
  * Activates the second tile if the given 2 tiles don't match
- * @param {First selected tile} first 
- * @param {Second selected tile} second 
+ * @param {First selected tile} first
+ * @param {Second selected tile} second
  */
 const onNotMatch = (first, second) => {
   first.className = "";
@@ -168,9 +168,9 @@ const onNotMatch = (first, second) => {
 }
 
 /**
- * Activates the element at x,y position 
- * @param {Position on X-axis} x 
- * @param {Position on Y-axis} y 
+ * Activates the element at x,y position
+ * @param {Position on X-axis} x
+ * @param {Position on Y-axis} y
  */
 const onFirstClick = (x, y) => {
   getElement(x, y).className = "active";
@@ -189,8 +189,8 @@ const getActive = () => {
 
 /**
  * Triggers validations when second tile is clicked
- * @param {Number of columns} x 
- * @param {Number of rows} y 
+ * @param {Number of columns} x
+ * @param {Number of rows} y
  */
 const onSecondClick = (x, y) => {
   let first = getActive();
@@ -224,8 +224,8 @@ const onSecondClick = (x, y) => {
 
 /**
  * Method triggered when a tile is clicked
- * @param {Number of columns} x 
- * @param {Number of rows} y 
+ * @param {Number of columns} x
+ * @param {Number of rows} y
  */
 const onClick = (x, y) => {
   if (!isPresent(x, y)) return;
@@ -249,8 +249,8 @@ const attachEventListenerAllCell = () => {
 
 /**
  * Shuffles the elements based on number of rows and columns
- * @param {Number of columns} x 
- * @param {Number of rows} y 
+ * @param {Number of columns} x
+ * @param {Number of rows} y
  */
 const shuffle = (x, y) => {
   let tdList = querySelectorAllAsList("td");
@@ -334,8 +334,8 @@ const isAnyMatched = () => {
 
 /**
  * Checks if shuffling of grid is required
- * @param {Number of columns} x 
- * @param {Number of rows} y 
+ * @param {Number of columns} x
+ * @param {Number of rows} y
  */
 const shuffleUntilAnyMatch = (x, y) => {
   while (!isAnyMatched()) {
@@ -348,8 +348,8 @@ const shuffleUntilAnyMatch = (x, y) => {
 
 /**
  * Converts the list of element values to matrix
- * @param {*} list 
- * @param {*} elementsPerSubArray 
+ * @param {*} list
+ * @param {*} elementsPerSubArray
  */
 function listToMatrix(list, elementsPerSubArray) {
   let matrix = [];
@@ -370,8 +370,8 @@ function listToMatrix(list, elementsPerSubArray) {
 
 /**
  * Creates a new table to display in the form of grid based on number of rows and columns
- * @param {Number of columns} x 
- * @param {Number of rows} y 
+ * @param {Number of columns} x
+ * @param {Number of rows} y
  */
 const newTable = (x, y) => {
   let table = newTableElement();
@@ -397,8 +397,8 @@ const newTable = (x, y) => {
 
 /**
  * Creates the grid of game based on number of columns and rows
- * @param {Number of columns} x 
- * @param {Number of rows} y 
+ * @param {Number of columns} x
+ * @param {Number of rows} y
  */
 const newGame = (x, y) => {
   PAIR_AMOUNT = (x * y) / 2;
@@ -428,9 +428,6 @@ let gameLevel = "";
  * Main method to decide game based on difficulty type
  */
 const main = () => {
-  document.querySelector("#shuffle").addEventListener("click", () => {
-    shuffleUntilAnyMatch(HORIZONTAL, VERTICAL);
-  });
   document.querySelector("#new-game-button").addEventListener("click", () => {
     startGame();
   });
