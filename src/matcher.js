@@ -8,6 +8,17 @@ import {
 } from "./model.js";
 import { getElement } from "./utils.js";
 
+/**
+ * Checks how the tiles can be matched
+ * @param {Unique Value for 1st tile} v1 
+ * @param {Unique Value for 2nd tile} v2 
+ * @param {Position of 1st tile on X-axis} p1X 
+ * @param {Position of 1st tile on Y-axis} p1Y 
+ * @param {Position of 2nd tile on X-axis} p2X 
+ * @param {Position of 2nd tile on X-axis} p2Y 
+ * @param {Number of columns} hor 
+ * @param {Number of rows} ver 
+ */
 function canMatch(v1, v2, p1X, p1Y, p2X, p2Y, hor, ver) {
   if (v1 !== v2) return false;
   if (p1X == p2X && p1Y == p2Y) return false; // CHECK FOR SAME PIECE
@@ -63,6 +74,15 @@ function adjacent(p1X, p1Y, p2X, p2Y) {
   return false;
 }
 
+/**
+ * Checks if the straight line is present or not between start and end position
+ * @param {Start Position on x-axis} p1X 
+ * @param {Start Position of on y-axis} p1Y 
+ * @param {End Position on x-axis} p2X 
+ * @param {End Position on y-axis} p2Y 
+ * @param {Flag to check if first right angle is present} isFirstJoint 
+ * @param {Flag to check if second right angle is present} isSecondJoint 
+ */
 function isStraightLine(p1X, p1Y, p2X, p2Y, isFirstJoint, isSecondJoint) {
   if (p1X == p2X) {
     if (p1Y > p2Y) {
@@ -151,8 +171,16 @@ function oneRA(p1X, p1Y, p2X, p2Y) {
   return false;
 }
 
+/**
+ * Identifies 2 right angles triangles
+ * @param {Position of first tile on x-axis} p1X 
+ * @param {Position of first tile on y-axis} p1Y 
+ * @param {Position of second tile on x-axis} p2X 
+ * @param {Position of second tile on y-axis} p2Y 
+ * @param {Number of columns} hor 
+ * @param {Number of rows} ver 
+ */
 function twoRA(p1X, p1Y, p2X, p2Y, hor, ver) {
-  // TODO: COMPLETE
   for (let i = -1; i <= ver; i++) {
     let firstJoint = { position: [p1X, i] };
     let secondJoint = { position: [p2X, i] };
@@ -184,6 +212,15 @@ function twoRA(p1X, p1Y, p2X, p2Y, hor, ver) {
   return false;
 }
 
+/**
+ * 
+ * @param {Position of first tile on x-axis} p1X 
+ * @param {Position of first tile on y-axis} p1Y 
+ * @param {Coordinates for First right angled triangle} firstJoint 
+ * @param {Coordinates for Second right angled triangle} secondJoint 
+ * @param {Position of second tile on x-axis} p2X 
+ * @param {Position of second tile on y-axis} p2Y 
+ */
 const connectFourPoint = (p1X, p1Y, firstJoint, secondJoint, p2X, p2Y) => {
   // first -> firstJoint -> secondJoint -> second
   let firstToFirstJoint = isStraightLine(

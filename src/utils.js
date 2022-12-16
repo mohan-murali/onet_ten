@@ -27,6 +27,11 @@ const querySelectorAllAsList = (selectorName) => {
 let canvas = document.querySelector("#game-overlay-canvas");
 let context = canvas.getContext("2d");
 
+/**
+ * Draws the line between the first and second tile if they match
+ * @param {First selected tile} first 
+ * @param {Second selected tile} second 
+ */
 const drawLine = (first, second) => {
   context.beginPath();
   context.moveTo(getCenter(first.x), getCenter(first.y));
@@ -37,6 +42,9 @@ const drawLine = (first, second) => {
   context.closePath();
 };
 
+/**
+ * Clears the line once tiles are hidden
+ */
 const clearLine = () => {
   context.clearRect(0, 0, canvas.width, canvas.height);
 };
@@ -47,6 +55,10 @@ const getCenter = (coordinate) => {
   );
 };
 
+/**
+ * Triggers drawing of line based on connection type
+ * @param {Type of connection} connect 
+ */
 const drawConnect = (
     connect
   ) => {
@@ -65,6 +77,10 @@ const drawConnect = (
     }
   }
 
+  /**
+   * Draws connection between two tiles
+   * @param {Connection Type} connect 
+   */
   function drawStraightConnect(connect) {
     drawLine(connect.first, connect.second);
   }
