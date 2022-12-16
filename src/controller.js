@@ -25,6 +25,7 @@ let currentTimeout = 0;
  * @param {text to be displayed to the user} text 
  */
 const showNotifyText = (text) => {
+  document.querySelector("#notify-text").style.color = "green";
   document.querySelector("#notify-text").innerHTML = text;
 };
 
