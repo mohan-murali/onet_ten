@@ -153,7 +153,7 @@ function oneRA(p1X, p1Y, p2X, p2Y) {
 
 function twoRA(p1X, p1Y, p2X, p2Y, hor, ver) {
   // TODO: COMPLETE
-  for (let i = 0; i <= ver; i++) {
+  for (let i = -1; i <= ver; i++) {
     let firstJoint = { position: [p1X, i] };
     let secondJoint = { position: [p2X, i] };
     let connecting = connectFourPoint(
@@ -168,7 +168,7 @@ function twoRA(p1X, p1Y, p2X, p2Y, hor, ver) {
   }
 
   // Vertical 2 points
-  for (let i = 0; i <= hor; i++) {
+  for (let i = -1; i <= hor; i++) {
     let firstJoint = { position: [i, p1Y] };
     let secondJoint = { position: [i, p2Y] };
     let connecting = connectFourPoint(
